@@ -1,38 +1,29 @@
-import React from 'react'
+import React, { useContext } from 'react'
+import Reveal from 'react-reveal/Fade';
+import { MainContext } from '../context/MainContext'
 import EQListItem from './EQListItem'
-import axios from 'axios';
-import { useEffect,useState } from 'react';
+import Loading from './Loading'
 
 export default function EQList() {
-
-  const API_URL = "https://api.orhanaydogdu.com.tr/deprem/live.php?limit=10";
-  const [loading,setLoading] = useState(true);
-  const [eqList,setEQList] = useState();
-
-  useEffect(() => {
-    const getData = async () => {
-      const data = await axios.get(API_URL);
-      setEQList(data.data.result)
-      setLoading(false);
-    };
-    getData()
-  },[])
+  const {eqList} = useContext(MainContext);
+  const {loading} = useContext(MainContext);
 
 
   if(loading){
-    return <div>loading..</div>
+    return <Loading />
   }
 
   if(!loading){
     return (
-      <section className='flex gap-2 flex-wrap'>
+      <Reveal>
+      <section className='flex gap-2 flex-wrap justify-center mt-2'>
         {eqList.map((eq,index) => {
           return (
             <EQListItem key={index} eqObj={eq} />
           )
         })}
-
       </section>
+      </Reveal>
     )
   }
 
